@@ -125,6 +125,7 @@ $(function () {
 
   /* Morris.js Charts */
   // Sales chart
+    /*
   var area = new Morris.Area({
     element: 'revenue-chart',
     resize: true,
@@ -175,8 +176,10 @@ $(function () {
     gridTextFamily: "Open Sans",
     gridTextSize: 10
   });
+  */
 
   //Donut Chart
+    /*
   var donut = new Morris.Donut({
     element: 'sales-chart',
     resize: true,
@@ -188,6 +191,7 @@ $(function () {
     ],
     hideHover: 'auto'
   });
+  */
 
   //Fix for charts under tabs
   $('.box ul.nav a').on('shown.bs.tab', function () {
