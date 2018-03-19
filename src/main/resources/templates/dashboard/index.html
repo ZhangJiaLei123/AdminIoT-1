@@ -14,9 +14,9 @@
     <link href="http://cdn.jsdelivr.net/webjars/bootstrap/3.3.7/css/bootstrap.min.css"
           th:href="@{/webjars/bootstrap/3.3.7/css/bootstrap.min.css}"
           rel="stylesheet" media="screen" />
-    <script src="js/sockjs-0.3.4.js"></script>
-    <script src="js/stomp.js"></script>
-    <script src="js/linechart.js"></script>
+    <script src="/charts/js/sockjs-0.3.4.js"></script>
+    <script src="/charts/js/stomp.js"></script>
+    <!--script src="/charts/js/linechart.js"></script-->
 </head>
 <body>
 <section layout:fragment="header">
@@ -36,11 +36,11 @@
             <!-- Custom tabs (Charts with tabs)-->
 
             <div class="nav-tabs-custom">
-                <ul class="nav nav-tabs pull-right">
+                <!--ul class="nav nav-tabs pull-right">
                     <li class="active"><a href="#line-chart" data-toggle="tab">Area</a></li>
                     <li><a href="#sales-chart" data-toggle="tab">Donut</a></li>
                     <li class="pull-left header"><i class="fa fa-inbox"></i> Sales</li>
-                </ul>
+                </ul-->
                 <div class="tab-content no-padding">
                     <div id="container" class="chart tab-pane active" style="position: relative; height: 400px;"></div>
                     <!--div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div-->
@@ -113,7 +113,7 @@
                     }
                 });
 
-                var socket = new SockJS('/stomp');
+                var socket = new SockJS('/charts/stomp');
                 var newValue;
                 var stompClient = Stomp.over(socket);
                 var message;
