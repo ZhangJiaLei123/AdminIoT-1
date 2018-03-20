@@ -31,4 +31,12 @@ public class ThermoSensor {
     public void setValue(Integer value) {
         this.value = value;
     }
+
+    @Override
+    public String toString() {
+        return "ThermoSensor{" +
+                "id=" + id +
+                ", value=" + value +
+                '}';
+    }
 }
