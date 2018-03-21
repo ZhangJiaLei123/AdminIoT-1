@@ -2,11 +2,14 @@ package com.rawsanj.adminlte.web.controller;
 
 import com.rawsanj.adminlte.dto.ChartDataDTO;
 import com.rawsanj.adminlte.model.ThermoSensor;
+import com.rawsanj.adminlte.model.ThermoSensorV2;
+import com.rawsanj.adminlte.service.PageInitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,8 +27,14 @@ public class DashboardController {
 
     private static Log logger = LogFactory.getLog(DashboardController.class);
 
+    private  Integer lastThermo;
+
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
+
+    @Autowired
+    private PageInitService pageInitService;
+
 
     @RequestMapping("/")
     public String index() {
@@ -36,6 +45,8 @@ public class DashboardController {
     public String index2() {
         return "dashboard/index2";
     }
+
+
 
 
     // Added to test 500 page
@@ -49,10 +60,29 @@ public class DashboardController {
         return ResponseEntity.ok(new ChartDataDTO(System.currentTimeMillis(), new Random().nextInt(100)));
     }
 
+
+    @PostMapping("/sensors/thermoinit")
+    public ResponseEntity<String> temperatureinit(@RequestBody ThermoSensorV2 sensor) {
+
+        try {
+            if (lastThermo!=null) {
+                sensor.setValue(lastThermo);
+                pageInitService.initPage(sensor);
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).contentType(MediaType.TEXT_PLAIN).body("success");
+    }
+
+
     @PostMapping("/sensors/thermo")
     public ResponseEntity<String> temperature(@RequestBody ThermoSensor sensor) {
 
         logger.info("thermo sensor ="+ sensor.toString());
+
+        lastThermo = sensor.getValue();
 
         this.simpMessagingTemplate.convertAndSend("/topic/airquality/temperature", ""+sensor.getValue() );
         this.simpMessagingTemplate.convertAndSend("/topic/airquality/windspeed", ""+sensor.getValue() );

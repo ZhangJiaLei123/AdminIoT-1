@@ -44,7 +44,7 @@
                 <div class="tab-content no-padding">
                     <div id="container" class="chart tab-pane active" style="position: relative; height: 400px;"></div>
                     <!--div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div-->
-                    <div class="chart tab-pane" id="sales-chart" style="position: relative; height: 300px;"></div>
+                    <div class="chart tab-pane" id="sales-chart" style="position: relative; height: 400px;"></div>
                 </div>
             </div>
 
@@ -62,7 +62,7 @@
                     <li class="pull-left header"><i class="fa fa-inbox"></i> Sales</li>
                 </ul-->
                 <div class="tab-content no-padding">
-                    <div id="container-speed" class="chart tab-pane active" style="position: relative; height: 300px;"></div>
+                    <div id="container-speed" class="chart tab-pane active" style="position: relative; height: 400px;"></div>
                     <!--div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div-->
                     <!--div class="chart tab-pane" id="sales-chart" style="position: relative; height: 300px;"></div-->
                 </div>
@@ -82,18 +82,38 @@
                     }
                 });
 
+                var sissionId = (function guid() {
+                    function s4() {
+                        return Math.floor((1 + Math.random()) * 0x10000)
+                            .toString(16)
+                            .substring(1);
+                    }
+                    return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
+                })();
+
+
                 var socket = new SockJS('/charts/stomp');
                 var newValue;
                 var stompClient = Stomp.over(socket);
                 var message;
+                var respSessionId;
                 stompClient.connect({ }, function(frame) {
                     // subscribe to the /topic/message endpoint
                     stompClient.subscribe("/topic/airquality/temperature", function(data) {
                         //alert("new value from server = "+data.body);
                         message = data.body;
-                        newValue = JSON.stringify(data.body);
+                        respSessionId = JSON.parse(data.body)["sessionId"];
+                        if (respSessionId!=null){
+                            if (respSessionId==sissionId) {
+                                newValue = parseInt(JSON.parse(data.body)["value"]);
+                            }
+                        }else{
+                            newValue = parseInt(message);
+                        }
+                        console.log("sessionId = "+respSessionId);
+                        console.log("sissionId = "+sissionId);
                         console.log("data = "+message);
-                        newValue = parseInt(message);
+                        //newValue = parseInt(message);
                         console.log("newValue = "+newValue);
                     });
                 });
@@ -251,7 +271,7 @@
 
                     series: [{
                         name: 'Thepmerature',
-                        data: [80],
+                        data: [0],
                         dataLabels: {
                             format: '<div style="text-align:center"><span style="font-size:25px;color:' +
                             ((Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black') + '">{y}</span><br/>' +
@@ -263,6 +283,22 @@
                     }]
 
                 }));
+
+                var item = {"id": "33","value": "24", "sessionId" : sissionId }
+                $.ajax({
+                    url: "http://localhost:8080/charts/sensors/thermoinit",
+                    data: JSON.stringify(item), //{action:'x',params:['a','b','c']}
+                    type: 'POST',
+                    processData: false,
+                    contentType: 'application/json',
+                    success: function(data) {
+                        console.log('hello');
+                    },
+                    error: function() {
+                        console.log('error');
+                    }
+                });
+
 
             });
         });
