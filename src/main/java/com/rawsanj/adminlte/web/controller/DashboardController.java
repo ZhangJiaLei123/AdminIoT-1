@@ -28,7 +28,15 @@ public class DashboardController {
 
     private static Log logger = LogFactory.getLog(DashboardController.class);
 
-    private  String lastThermo;
+    private  String lastThermoQt1;
+    private  String lastThermoQt2;
+    private  String lastThermoQt3;
+    private  String lastThermoQt4;
+    private  String lastThermodQt1;
+    private  String lastThermodQt3;
+    private  String lastThermoWt1;
+    private  String lastThermoWt3;
+    private  String lastThermoWt4;
 
     @Autowired
     private SimpMessagingTemplate simpMessagingTemplate;
@@ -66,9 +74,10 @@ public class DashboardController {
     public ResponseEntity<String> temperatureinit(@RequestBody ThermoSensorV2 sensor) {
 
         try {
-            if (lastThermo!=null) {
-                sensor.setValue(lastThermo);
-                pageInitService.initPage(sensor);
+            if (lastThermoQt1!=null) {
+                sensor.setValue(lastThermoQt1);
+                pageInitService.initPage(sensor.getSessionId(),lastThermoQt1,lastThermoQt2,lastThermoQt3,lastThermoQt4
+                ,lastThermodQt1,lastThermodQt3,lastThermoWt1,lastThermoWt3,lastThermoWt4);
             }
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -84,39 +93,39 @@ public class DashboardController {
         for(ThermoSensor sensor : sensors){
             logger.info("thermo sensor ="+ sensor.toString());
             if(sensor.getId().equals("Qt1")) {
-                lastThermo = sensor.getValue();
+                lastThermoQt1 = sensor.getValue();
                 this.simpMessagingTemplate.convertAndSend("/topic/airquality/temperatureQt1", "" + sensor.getValue());
             }
             if(sensor.getId().equals("Qt2")) {
-                lastThermo = sensor.getValue();
+                lastThermoQt2 = sensor.getValue();
                 this.simpMessagingTemplate.convertAndSend("/topic/airquality/temperatureQt2", "" + sensor.getValue());
             }
             if(sensor.getId().equals("Qt3")) {
-                lastThermo = sensor.getValue();
+                lastThermoQt3 = sensor.getValue();
                 this.simpMessagingTemplate.convertAndSend("/topic/airquality/temperatureQt3", "" + sensor.getValue());
             }
             if(sensor.getId().equals("Qt4")) {
-                lastThermo = sensor.getValue();
+                lastThermoQt4 = sensor.getValue();
                 this.simpMessagingTemplate.convertAndSend("/topic/airquality/temperatureQt4", "" + sensor.getValue());
             }
             if(sensor.getId().equals("dQt1")) {
-                lastThermo = sensor.getValue();
+                lastThermodQt1 = sensor.getValue();
                 this.simpMessagingTemplate.convertAndSend("/topic/airquality/temperaturedQt1", "" + sensor.getValue());
             }
             if(sensor.getId().equals("dQt3")) {
-                lastThermo = sensor.getValue();
+                lastThermodQt3 = sensor.getValue();
                 this.simpMessagingTemplate.convertAndSend("/topic/airquality/temperaturedQt3", "" + sensor.getValue());
             }
             if(sensor.getId().equals("Wt1")) {
-                lastThermo = sensor.getValue();
+                lastThermoWt1 = sensor.getValue();
                 this.simpMessagingTemplate.convertAndSend("/topic/airquality/temperatureWt1", "" + sensor.getValue());
             }
             if(sensor.getId().equals("Wt3")) {
-                lastThermo = sensor.getValue();
+                lastThermoWt3 = sensor.getValue();
                 this.simpMessagingTemplate.convertAndSend("/topic/airquality/temperatureWt3", "" + sensor.getValue());
             }
             if(sensor.getId().equals("Wt4")) {
-                lastThermo = sensor.getValue();
+                lastThermoWt4 = sensor.getValue();
                 this.simpMessagingTemplate.convertAndSend("/topic/airquality/temperatureWt4", "" + sensor.getValue());
             }
 
