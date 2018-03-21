@@ -22,7 +22,7 @@ public class PageInitService {
     @Async
     public void initPage(ThermoSensorV2 sensor) throws InterruptedException {
         System.out.println("Looking up " + sensor);
-        Thread.sleep(1000L);
+        Thread.sleep(1500L);
 
         logger.info("thermo sensor ="+ sensor.toString());
 

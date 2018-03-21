@@ -4,7 +4,7 @@ package com.rawsanj.adminlte.model;
 public class ThermoSensorV2 {
 
     private int id;
-    private Integer value;
+    private String value;
     private String sessionId;
 
 
@@ -12,13 +12,13 @@ public class ThermoSensorV2 {
 
     }
 
-    public ThermoSensorV2(int id, Integer value) {
+    public ThermoSensorV2(int id, String value) {
         this.id = id;
         this.value = value;
     }
 
 
-    public ThermoSensorV2(int id, Integer value, String sessionId) {
+    public ThermoSensorV2(int id, String value, String sessionId) {
         this.id = id;
         this.value = value;
         this.sessionId = sessionId;
@@ -33,11 +33,11 @@ public class ThermoSensorV2 {
         this.id = id;
     }
 
-    public Integer getValue() {
+    public String getValue() {
         return value;
     }
 
-    public void setValue(Integer value) {
+    public void setValue(String value) {
         this.value = value;
     }
 
